@@ -2,7 +2,6 @@
 <html>
 
 @include('includes.head')
-
 <body>
 @php
     $route = request()->route()->getName();

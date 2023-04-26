@@ -13,6 +13,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application as ApplicationAlias;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -50,13 +52,7 @@ class PropertyController extends Controller
 
         // ***************************** upload image start ***************************** //
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $imagePath = $file->store($property->id);
-                PropertyImage::create([
-                    'path' => $imagePath,
-                    'property_id' => $property->id
-                ]);
-            }
+            $this->uploadImageForProperty($request->file('images'), $property);
         }
         // ***************************** upload image end ***************************** //
 
@@ -79,7 +75,7 @@ class PropertyController extends Controller
     public function edit(Property $property): View|ApplicationAlias|Factory|Application
     {
         return view('dashboard.property.edit', [
-            'property' => $property->load('options'),
+            'property' => $property->load(['options', 'images']),
             'options' => Option::pluck('name', 'id'),
         ]);
     }
@@ -102,5 +98,53 @@ class PropertyController extends Controller
         $property->delete();
         return redirect()->back()->with('success', 'property deleted with successfully');
 
+    }
+
+    /**
+     * delete image from storage and property
+     * @param Property $property
+     * @param string $imageId
+     * @return RedirectResponse
+     */
+    public function deleteImageFromProperty(Property $property, string $imageId): RedirectResponse
+    {
+        $image = PropertyImage::findOrFail($imageId);
+        Storage::delete($image->path);
+        $image->delete();
+        return back()->with('success', 'image was deleted with successfully');
+    }
+
+    /**
+     * add image to property
+     * @param Request $request
+     * @param Property $property
+     * @return RedirectResponse
+     */
+    public function addImageToProperty(Request $request, Property $property): RedirectResponse
+    {
+        $request->validate([
+            'images' => ['required'],
+            'images.*' => ['image']
+        ]);
+        $this->uploadImageForProperty($request->file('images'), $property);
+        return back()->with('success', 'images was added with successfully');
+
+    }
+
+    /**
+     * upload image form property
+     * @param $images
+     * @param Property $property
+     * @return void
+     */
+    public function uploadImageForProperty($images, Property $property): void
+    {
+        foreach ($images as $file) {
+            $imagePath = $file->store($property->id);
+            PropertyImage::create([
+                'path' => $imagePath,
+                'property_id' => $property->id
+            ]);
+        }
     }
 }

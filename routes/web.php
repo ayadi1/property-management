@@ -32,6 +32,8 @@ Route::post('logout', [AuthController::class, 'logout'])
 
 Route::prefix('/dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::resource('properties', PropertyController::class)->names('properties')->except(['show']);
+    Route::delete('properties/delete-image/{property}/{imageId}', [PropertyController::class,'deleteImageFromProperty'])->name('properties.deleteImageFromProperty');
+    Route::post('properties/addImageToProperty/{property}', [PropertyController::class,'addImageToProperty'])->name('properties.addImageToProperty');
     Route::resource('options', OptionController::class)->names('options')->except(['show']);
 });
 

@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('property_images', function (Blueprint $table) {
             $table->id();
             $table->string('path');
-            $table->foreignIdFor(\App\Models\Property::class);
+            $table->foreignIdFor(\App\Models\Property::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

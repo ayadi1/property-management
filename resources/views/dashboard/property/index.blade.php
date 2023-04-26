@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-    <h1>properties</h1>
+    <h1>Properties</h1>
 
 
     <div class="card mt-3">
