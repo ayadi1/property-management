@@ -7,6 +7,7 @@ use App\Http\Requests\Dashboard\StorePropertyRequest;
 use App\Http\Requests\Dashboard\UpdatePropertyRequest;
 use App\Models\Option;
 use App\Models\Property;
+use App\Models\PropertyImage;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -46,6 +47,19 @@ class PropertyController extends Controller
     {
         $property = Property::create($request->validated());
         $property->options()->sync($request->validated('options'));
+
+        // ***************************** upload image start ***************************** //
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $imagePath = $file->store($property->id);
+                PropertyImage::create([
+                    'path' => $imagePath,
+                    'property_id' => $property->id
+                ]);
+            }
+        }
+        // ***************************** upload image end ***************************** //
+
         return redirect()->route('dashboard.properties.index')->with('success', 'property created with successfully');
     }
 
@@ -65,7 +79,7 @@ class PropertyController extends Controller
     public function edit(Property $property): View|ApplicationAlias|Factory|Application
     {
         return view('dashboard.property.edit', [
-            'property' => $property,
+            'property' => $property->load('options'),
             'options' => Option::pluck('name', 'id'),
         ]);
     }

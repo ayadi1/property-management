@@ -35,4 +35,9 @@ class Property extends Model
     {
         return $this->hasMany(PropertyImage::class);
     }
+
+    public function firstImage()
+    {
+        return $this->images()->first();
+    }
 }

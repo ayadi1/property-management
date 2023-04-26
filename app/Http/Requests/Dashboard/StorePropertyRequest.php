@@ -22,16 +22,17 @@ class StorePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'=>['required','min:4','max:255','string'],
-            'description'=>['required','max:5000'],
-            'surface'=>['required','integer'],
-            'rooms'=>['required','integer'],
-            'bedrooms'=>['required','integer'],
-            'price'=>['required','numeric'],
-            'city'=>['required','max:255'],
-            'address'=>['required','max:255'],
-            'sold'=>['required','boolean'],
-            'options'=>['array','exists:options,id']
+            'title' => ['required', 'min:4', 'max:255', 'string'],
+            'description' => ['required', 'max:5000'],
+            'surface' => ['required', 'integer'],
+            'rooms' => ['required', 'integer'],
+            'bedrooms' => ['required', 'integer'],
+            'price' => ['required', 'numeric'],
+            'city' => ['required', 'max:255'],
+            'address' => ['required', 'max:255'],
+            'sold' => ['required', 'boolean'],
+            'options' => ['array', 'exists:options,id'],
+            'images.*' => ['image']
         ];
     }
 }

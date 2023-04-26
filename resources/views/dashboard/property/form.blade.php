@@ -1,6 +1,6 @@
 <form
     action="{{route($property->id?'dashboard.properties.update':'dashboard.properties.store',$property)}}"
-    method="post">
+    method="post" enctype="multipart/form-data">
     @csrf
     @method($property->id?'patch':'post')
     <div class="row">
@@ -44,6 +44,11 @@
         </div>
     </div>
 
+    @if(!$property->id)
+        <x-form.input-file label="images" placeholder="images" multiple="true" id="images" name="images[]"
+                           type="file"/>
+    @endif
+
     <x-form.textarea label="description" placeholder="description" id="description" name="description"
                      value="{{$property?->description}}"/>
     <x-form.checkbox label="sold" id="sold" name="sold"
@@ -51,8 +56,8 @@
 
     <div class="row">
         <div class="col">
-            <x-form.select multiple="true"  label="options" placeholder="options" id="options" name="options"
-                           :options="$options" :value="$property->options()->get()" />
+            <x-form.select multiple="true" label="options" placeholder="options" id="options" name="options"
+                           :options="$options" :value="$property->options()->get()"/>
         </div>
     </div>
     <button class="btn btn-primary" type="submit">
