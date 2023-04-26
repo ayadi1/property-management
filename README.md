@@ -14,7 +14,7 @@
 
 To get started with this application, follow these steps:
 
-- Clone the repository to your local machine: git clone https://github.com/ayadi1/property-management.git
+- Clone the repository to your local machine: `git clone https://github.com/ayadi1/property-management`
 - Navigate to the project directory: `cd property-management`
 - Install dependencies: `composer install`
 - Create a copy of the .env.example file and rename it to .env: `cp .env.example .env`
